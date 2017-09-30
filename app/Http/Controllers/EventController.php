@@ -79,6 +79,27 @@ class EventController extends Controller
     }
     public function disabled($id)
     {
-
+      Event::where('id',$id)->update(['status'=>0]);
+      return back();
+    }
+    public function edit($id)
+    {
+      // dump($id);
+      $type_data = Type::pluck('name','id');
+      $eventchng = Event::find($id);
+        return view('events.edit',['eventedit'=>$eventchng,'data_type'=>$type_data]);
+        
+    }
+     public function update(Request $request)
+    {  
+        dump($request->all());
+        Event::where('id',$request['id'])->update($request->except('_token'));
+        return redirect()->route('events.listing');
+    }
+    public function delete($id)
+    {
+       
+        Event::where('id',$id)->delete();
+        return back();
     }
 }

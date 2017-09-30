@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Events</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="{{ asset('css/bootstrapcss/bootstrap.min.css')}}" type="text/css" rel="stylesheet"/>
+	<title>Edit Event</title>
+		<link href="{{asset('css/bootstrapcss/bootstrap.min.css')}}" type="text/css" rel="stylesheet"/>
     <script src="{{ asset('css/jsfile/jquery-3.1.1.min.js')}}" type="text/javascript"/></script>
 	<script src="{{ asset('css/jsfile/bootstrap.min.js')}}" type="text/javascript"/></script>
-	
 </head>
 <body>
 <div class="container" style="width:50%">
@@ -19,8 +17,9 @@
 		        @endphp
 	    </div>
 	  @endif
-		<center><h2><b>Add Events</b></h2></center>
-		{!! Form::open(['route' => 'create.event', 'method'=>'post', 'files'=>'true']) !!}
+		<center><h2><b>Edit Events</b></h2></center>
+		{!! Form::Model($eventedit,['route' => 'events.update', 'method'=>'post', 'files'=>'true']) !!}
+
 		<div class="row">
 			<div class="col-md-12">
 		 		<div class="form-group">
@@ -51,7 +50,7 @@
 			<div class="col-md-12">
 				<div class="form-group">
 					{!! Form::label('Description', 'Description') !!}
-					{!! Form::textarea('description', null, array('placeholder' => 'Description','class' => 'form-control','style'=>'col:')) !!}
+					{!! Form::textarea('description', null, array('placeholder' => 'Description','class' => 'form-control')) !!}
 						@if ($errors->has('description'))
                 		<span class="text-danger">{{ $errors->first('description') }}</span>
             			@endif
@@ -63,20 +62,29 @@
 					{!! Form::file('video', null, array('class' => 'form-control')) !!}
 				</div>
 			</div>
+
+@if(!empty($eventedit['images']))
+		{{dump($images = json_decode($eventedit['images'],true))}}
+
+		@foreach($images as $img =>$imgVal)
+				{{$imgVal}}
+
+			<img width="100 " src='{{asset("images")}}\{{$imgVal}}'>
+		@endforeach 
+@endif
+
 			<div class="col-md-12">
 				<div class="form-group">
 					{!! Form::label('Images', 'Images') !!}
 					{!! Form::file('images[]', null, array('class' => 'form-control')) !!}
 				</div>
-				<button class="add_field_button">Add More Fields</button>
 			</div>
-			<div id="extend"></div>
-			{{-- <div class="col-md-12">
+			<div class="col-md-12">
 				<div class="form-group">
 					{!! Form::label('Images', 'Images') !!}
 					{!! Form::file('images[]', null, array('class' => 'form-control')) !!}
 				</div>
-			</div> --}}
+			</div>
 			<div class="col-md-12">
 				<div class="form-group">
 					{!! Form::label('Mobile', 'Mobile') !!}
@@ -128,35 +136,9 @@
 			 		{!! Form::submit('SAVE',['class' => 'btn-warning btn-md' ,'style'=>'width:100px']) !!}
 			 	</div>
 			</div>
-
+			{!! Form::hidden('id') !!}
 	 	{!! Form::close() !!}
  		</div>
 </div>
-<script type="text/javascript">
-$(document).ready(function() {
-	alert(334);
-    var max_fields      = 10; //maximum input boxes allowed
-    var field         = $("#extend"); //Fields wrapper
-    var add_button      = $(".add_field_button"); //Add button ID
-    
-    var x = 1; //initlal text box count
-    $(add_button).click(function(e){
-    	alert(124);
-
-     //on add input button click
-        e.preventDefault();
-        if(x < max_fields){ //max input box allowed
-            x++; //text box increment
-            $(field).append('<div class="form-group"><input type="file" name="images[]" class="form-control"/><a href="#" class="remove_field"><button><b>-</b></button></a></div>'); //add input box
-        }
-    });
-    
-    $(field).on("click",".remove_field", function(e){ //user click on remove text
-        e.preventDefault();
-         $(this).parent('div').remove(); x--;
-    })
-});
-
-</script>
 </body>
 </html>
